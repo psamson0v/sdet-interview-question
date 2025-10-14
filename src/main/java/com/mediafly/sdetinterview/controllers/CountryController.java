@@ -1,0 +1,27 @@
+package com.mediafly.sdetinterview.controllers;
+
+
+import com.mediafly.sdetinterview.services.CountryService;
+import org.springframework.web.bind.annotation.*;
+import com.mediafly.sdetinterview.models.*;
+import java.util.List;
+
+@RestController
+public class CountryController {
+
+    private final CountryService countryService;
+
+    public CountryController(CountryService countryService) {
+        this.countryService = countryService;
+    }
+
+    @GetMapping("country/")
+    public List<CountryDTO> index() {
+        return countryService.getCountries();
+    }
+
+    @PostMapping("country/")
+    public void getCountryByName(@RequestBody CountryDTO country) {
+        countryService.addCountry(country);
+    }
+}
