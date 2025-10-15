@@ -25,6 +25,6 @@ public class CountryService {
     }
 
     public CountryDTO getCountry(String code) {
-        return new CountryDTO("code");
+        return new CountryDTO(code);
     }
 }

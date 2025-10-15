@@ -20,6 +20,10 @@ public class CountryController {
         return countryService.getCountries();
     }
 
+    @GetMapping("country/{name}")
+    public CountryDTO getCountry(@PathVariable String name) {
+        return countryService.getCountry(name);
+    }
     @PostMapping("country/")
     public void getCountryByName(@RequestBody CountryDTO country) {
         countryService.addCountry(country);
