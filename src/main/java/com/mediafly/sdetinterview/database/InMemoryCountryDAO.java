@@ -14,6 +14,11 @@ public class InMemoryCountryDAO implements CountryDAO {
         return countries;
     }
 
+    @Override
+    public List<CountryDTO> getCountriesByPrefix(String prefix) {
+        return countries.stream().filter(c -> c.getName().startsWith(prefix)).toList();
+    }
+
     public void addCountry(CountryDTO countryDTO) {
         countries.add(countryDTO);
     }

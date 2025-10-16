@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,7 +35,7 @@ class SdetInterviewApplicationTests {
     }
 
 	@Test
-	void AddingOneCountry() throws Exception {
+	void addingOneCountry() throws Exception {
         CountryDTO canada = new CountryDTO("Canada");
 
         ObjectMapper mapper = new ObjectMapper();
@@ -50,7 +49,7 @@ class SdetInterviewApplicationTests {
 	}
 
     @Test
-    void GettingOneCountry() throws Exception {
+    void gettingOneCountry() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/country/Canada").accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Canada")));

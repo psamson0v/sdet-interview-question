@@ -5,6 +5,7 @@ import com.mediafly.sdetinterview.models.CountryDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +25,14 @@ public class CountryService {
         countryDAO.addCountry(countryDTO);
     }
 
-    public CountryDTO getCountry(String code) {
-        return new CountryDTO(code);
+    public CountryDTO getCountry(String name) {
+        return new CountryDTO(name);
+    }
+
+    public List<CountryDTO>  getCountryByPrefix(String prefix) {
+        if (prefix.length() < 2 ) {
+            return new ArrayList<>(); // Too few characters for autocomplete
+        }
+        return countryDAO.getCountriesByPrefix(prefix);
     }
 }

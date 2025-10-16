@@ -19,11 +19,15 @@ public class CountryController {
     public List<CountryDTO> index() {
         return countryService.getCountries();
     }
-
     @GetMapping("country/{name}")
     public CountryDTO getCountry(@PathVariable String name) {
         return countryService.getCountry(name);
     }
+    @GetMapping("country/search/{name}")
+    public CountryDTO getCountryByPrefix(@PathVariable String name) {
+        return countryService.getCountry(name);
+    }
+
     @PostMapping("country/")
     public void getCountryByName(@RequestBody CountryDTO country) {
         countryService.addCountry(country);
