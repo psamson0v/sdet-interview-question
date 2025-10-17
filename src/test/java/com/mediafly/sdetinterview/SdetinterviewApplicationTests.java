@@ -3,7 +3,9 @@ package com.mediafly.sdetinterview;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.mediafly.sdetinterview.models.CityDTO;
 import com.mediafly.sdetinterview.models.CountryDTO;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -55,4 +57,87 @@ class SdetInterviewApplicationTests {
                 .andExpect(jsonPath("$.name", is("Canada")));
     }
 
+    @Test
+    void addingOneCity() throws Exception {
+        CountryDTO canada = new CountryDTO("Canada");
+        CityDTO toronto = new CityDTO("Toronto", canada);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson=ow.writeValueAsString(canada);
+
+        mvc.perform(post("/country/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+
+        requestJson=ow.writeValueAsString(toronto);
+
+        mvc.perform(post("/city/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/city/Toronto").accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Toronto")))
+                .andExpect(jsonPath("$.country.name", is("Canada")));
+
+        mvc.perform(MockMvcRequestBuilders.get("/city/?country=Canada").contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is("Toronto")))
+                .andExpect(jsonPath("$[0].country.name", is("Canada")));
+
+        mvc.perform(MockMvcRequestBuilders.get("/city/?country=USA").contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect( jsonPath( "$", Matchers.empty()));
+    }
+
+    @Test
+    void addingManyCities() throws Exception {
+        CountryDTO canada = new CountryDTO("Canada");
+        CityDTO toronto = new CityDTO("Toronto", canada);
+        CityDTO hamilton = new CityDTO("Hamilton", canada);
+
+        CountryDTO usa = new CountryDTO("USA");
+        CityDTO newYork = new CityDTO("New York", usa);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson=ow.writeValueAsString(canada);
+
+        mvc.perform(post("/country/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+
+        requestJson=ow.writeValueAsString(toronto);
+
+        mvc.perform(post("/city/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/city/Toronto").accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Toronto")))
+                .andExpect(jsonPath("$.country.name", is("Canada")));
+
+
+        requestJson=ow.writeValueAsString(hamilton);
+
+        mvc.perform(post("/city/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders.get("/city/Hamilton").accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Hamilton")))
+                .andExpect(jsonPath("$.country.name", is("Canada")));
+
+
+        // Can't create New York since USA was not created
+        requestJson=ow.writeValueAsString(newYork);
+        mvc.perform(post("/city/").contentType(APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().is4xxClientError());
+    }
 }
