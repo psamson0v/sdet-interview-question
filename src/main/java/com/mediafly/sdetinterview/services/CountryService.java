@@ -22,6 +22,12 @@ public class CountryService {
     }
 
     public void addCountry(CountryDTO countryDTO) {
+        if (countryDTO.getName() == null || countryDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Country must have a name");
+        }
+        if (countryDTO.getName().length() > 100) {
+            throw new IllegalArgumentException("Country name too long");
+        }
         countryDAO.addCountry(countryDTO);
     }
 
