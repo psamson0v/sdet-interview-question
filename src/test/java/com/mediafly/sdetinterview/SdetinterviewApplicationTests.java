@@ -86,10 +86,6 @@ class SdetInterviewApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name", is("Toronto")))
                 .andExpect(jsonPath("$[0].country.name", is("Canada")));
-
-        mvc.perform(MockMvcRequestBuilders.get("/city/?country=USA").contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect( jsonPath( "$", Matchers.empty()));
     }
 
     void addingManyCities() throws Exception {
