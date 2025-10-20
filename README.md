@@ -35,5 +35,6 @@ list of cities for cities that start with the specified substring. For any endpo
 can optionally be specified. In this case, only cities from that country are returned.  The following limits apply:
 - A city name can only be up to 100 characters long
 - A city must belong to a valid country
+- The search endpoint will not work for inputs of less than 2 characters
 
 

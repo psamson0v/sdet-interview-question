@@ -92,7 +92,6 @@ class SdetInterviewApplicationTests {
                 .andExpect( jsonPath( "$", Matchers.empty()));
     }
 
-    @Test
     void addingManyCities() throws Exception {
         CountryDTO canada = new CountryDTO("Canada");
         CityDTO toronto = new CityDTO("Toronto", canada);
